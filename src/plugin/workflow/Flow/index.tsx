@@ -40,6 +40,7 @@ interface ICommond {
   command: string;
   /** 命令对象 */
   CommandObject: any;
+  fn?: () => boolean;
 }
 
 interface IProps {

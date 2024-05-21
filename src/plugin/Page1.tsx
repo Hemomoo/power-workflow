@@ -10,6 +10,7 @@ import React, { Component } from 'react'
 import Flow from './workflow/Flow'
 
 import { ToolGroup, ToolItem } from './workflow/Flow/Components/Toolbar'
+import G6 from '@antv/g6';
 // import Flow from 'max-workflow';
 
 // import { default as Flow, Workflow } from '../dist/power-workflow';
@@ -50,6 +51,38 @@ import 'font-awesome/css/font-awesome.css';
 // }
 
 const registerEdges = [maxtest1]
+
+const contextMenu = new G6.Menu({
+  getContent(evt) {
+    let header;
+    if (evt.target && evt.target.isCanvas && evt.target.isCanvas()) {
+      header = 'Canvas ContextMenu';
+    } else if (evt.item) {
+      const itemType = evt.item.getType();
+      header = `${itemType.toUpperCase()} ContextMenu`;
+    }
+    return `
+    <h3>${header}</h3>
+    <ul>
+      <li title='1'>li 1</li>
+      <li title='2'>li 2</li>
+      <li>li 3</li>
+      <li>li 4</li>
+      <li>li 5</li>
+    </ul>`;
+  },
+  handleMenuClick: (target, item) => {
+    console.log(target, item);
+  },
+  // offsetX and offsetY include the padding of the parent container
+  // 需要加上父级容器的 padding-left 16 与自身偏移量 10
+  offsetX: 16 + 10,
+  // 需要加上父级容器的 padding-top 24 、画布兄弟元素高度、与自身偏移量 10
+  offsetY: 0,
+  // the types of items that allow the menu show up
+  // 在哪些类型的元素上响应
+  itemTypes: ['node', 'edge', 'canvas'],
+});
 
 class MyCommand {
   execute({ graph }) {
@@ -187,7 +220,7 @@ export default class App extends Component {
         groupIcon: 'fa-cubes',
         nodes: [
           {
-            nodeType: 'flow-node',
+            nodeType: 'strategy-node',
             thumbnail: 'rect',
             style: {
               fill: '#FE9201',
@@ -198,13 +231,14 @@ export default class App extends Component {
               titleText: '获取数据',
               leftText: '大数据',
               icon1: '/icon/paihangbang.svg',
+              icon2: '/icon/aite.svg',  
               size: [120, 50]
             },
             text: '图表节点',
             icon: 'http://localhost:8080/icon/paihangbang.svg'
           },
           {
-            nodeType: 'flow-node',
+            nodeType: 'strategy-node',
             thumbnail: 'rect',
             style: {
               fill: '#05BB2F',
@@ -215,9 +249,10 @@ export default class App extends Component {
               titleText: '攻击网站',
               leftText: 'gogo',
               icon1: '/icon/aite.svg',
+              icon2: '/icon/aite.svg',
             },
             text: '图表节点',
-            icon: 'http://localhost:8080/icon/aite.svg'
+            icon: 'http://localhost:8080/icon/dianshi.svg'
           },
           {
             nodeType: 'max-circle-node',
@@ -291,7 +326,7 @@ export default class App extends Component {
         groupIcon: 'fa-cubes',
         nodes: [
           {
-            nodeType: 'flow-node',
+            nodeType: 'strategy-node',
             thumbnail: 'rect',
             style: {
               fill: '#FE9201',
@@ -391,7 +426,7 @@ export default class App extends Component {
       },
       {
         id: 'node2',
-        type: 'flow-node',
+        type: 'strategy-node',
         size: [170, 70],
         // x: 600,
         // y: 200,
@@ -404,7 +439,7 @@ export default class App extends Component {
       },
       // {
       //   id: 'node3',
-      //   type: 'flow-node',
+      //   type: 'strategy-node',
       //   size: [170, 70],
       //   // x: 600,
       //   // y: 200,
@@ -739,6 +774,7 @@ export default class App extends Component {
           returnGraph={this.getGraph}
           registerEdgeList={registerEdges}
           mode={'edit'}
+          initPlugins={[contextMenu]}
           // judgeEdgeEnd={(sourceNode, targetNode) => { console.log(sourceNode);  return false;}}
           toolbar={
             (

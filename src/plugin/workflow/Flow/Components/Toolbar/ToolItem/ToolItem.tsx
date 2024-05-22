@@ -19,13 +19,7 @@ interface IProps {
 }
 
 const ToolItem: React.FC<IProps> = memo(({ text, icon, command, params, status = true, event, onChange }) => {
-
   const [ divProps, setDivParps ] = useState({});
-
-  const handleClick = () => {
-    onChange && onChange(event);
-  }
-
   useEffect(() => {
     const startProps: { 'data-command'?: string, 'data-params'?: string } = {};
     if(command) {
@@ -38,6 +32,10 @@ const ToolItem: React.FC<IProps> = memo(({ text, icon, command, params, status =
 
     setDivParps(startProps);
   }, [])
+
+  const handleClick = () => {
+    onChange && onChange(event);
+  }
 
   return (
     <div className={`xioo-work-header-group-icon ${status ? 'actionable' : ''}`} {...divProps} onClick={handleClick}>

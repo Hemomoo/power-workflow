@@ -2,27 +2,24 @@ import BaseNode from './BaseNode';
 import nodeStyle from '../../defaultStyle/nodeStyle';
 
 export default class FlowNode extends BaseNode {
-  name = 'flow-node'
+  name = 'strategy-node'
   constructor(Grid) {
     super(Grid, true);
     this.register();
   }
   draw(cfg, group, inc) {
     this.size = this.computeNodeSize(cfg);
-    // console.log(this.size)
+    console.log(">>>>>>>>>>", this.size)
 
     const keyShape = this.drawKeyShape(cfg, group);
     // this.drawAnchor(group);
-
-    // this.drawLeftText(cfg, group);
 
     this.drawTitleText(cfg, group);
 
     this.drawIcon(cfg.icon1, group, 6);
 
-    this.drawIcon(cfg.icon2, group, 24);
+    this.drawIcon(cfg.icon2, group, this.size.width - 24);
 
-    this.drawRightText(cfg, group);
 
     this.drawStatusShape(cfg, group);
 
@@ -55,15 +52,12 @@ export default class FlowNode extends BaseNode {
       return group;
     }
 
-    // 左边文字
-    const updateLeftText = (props) => {
-      updateShape({ index: 1, ...props });
-      return group;
-    }
+   
 
     // 主题文字
     const updateText = (props) => {
-      updateShape({ index: 2, ...props });
+      console.log('props: ', props);
+      updateShape({ index: 1, ...props });
       return group;
     }
 
@@ -81,14 +75,12 @@ export default class FlowNode extends BaseNode {
     // 这样写类的时候是一个类去做的，没有闭包存在，所有所有的组件都是公用的同一个size，
     const size = this.size;
 
-    const textWidthToEllipsis = ({ text, threshold = 4, width = size.width, fontSize = 14 }) => {
+    const textWidthToEllipsis = ({ text, threshold = 4, width = size.width - 40, fontSize = 14 }) => {
       return this.textWidthToEllipsis({ text, threshold, width, fontSize });
     }
 
     group.updateKeyShape = updateKeyShape;
-    // group.updateLeftText = updateLeftText;
     group.updateText = updateText;
-    group.updateRightText = updateRightText;
     group.updateIcon = updateIcon;
     // 添加自动计算宽度的
     group.textWidthToEllipsis = textWidthToEllipsis;
@@ -113,24 +105,6 @@ export default class FlowNode extends BaseNode {
     });
   }
 
-  /** 绘制右下角的text */
-  drawRightText(cfg, group) {
-    const { rightText, rightTextStyle = {} } = cfg;
-    // if(!rightText) return;
-    const { width, height } = this.size;
-    const attrs = {
-      ...nodeStyle.rightText.origin,
-      text: rightText ? rightText : '',
-      x: width - 12,
-      y: height - 12,
-      ...rightTextStyle
-    };
-    group.addShape('text', {
-      attrs,
-      name: 'power-right-text',
-      className: 'right-text'
-    });
-  }
 
   /** 绘制主题文字 */
   drawTitleText(cfg, group) {
@@ -145,15 +119,15 @@ export default class FlowNode extends BaseNode {
 
     // 可以容纳多少字符
     titleText = this.textWidthToEllipsis({ text: titleText, fontSize: 14, width: this.size.width });
-
-    // if(titleText.length > 25) {
-    //   titleText = titleText.slice(0, 24) + '...'
-    // }
+    if(titleText.length > 25) {
+      titleText = titleText.slice(0, 24) + '...'
+    }
     const attrs = {
       ...nodeStyle.titleText.origin,
       text: titleText,
       x: width / 2,
       y: height / 2,
+      fontWeight: 100,
       ...titleTextStyle
     }
 
@@ -258,9 +232,9 @@ export default class FlowNode extends BaseNode {
       attrs: {
         img: icon,
         x: x,
-        y: height - 20,
-        width: 16,
-        height: 16,
+        y: height / 2 - 20,
+        width: 40,
+        height: 40,
         shadowColor: '#E6E6E6',
         shadowBlur: 4,
       },

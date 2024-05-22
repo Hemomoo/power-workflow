@@ -232,13 +232,13 @@ export default class App extends Component {
               leftText: '大数据',
               icon1: '/icon/paihangbang.svg',
               icon2: '/icon/aite.svg',  
-              size: [120, 50]
+              size: [200, 50]
             },
             text: '图表节点',
             icon: 'http://localhost:8080/icon/paihangbang.svg'
           },
           {
-            nodeType: 'strategy-node',
+            nodeType: 'flow-node',
             thumbnail: 'rect',
             style: {
               fill: '#05BB2F',
@@ -326,7 +326,7 @@ export default class App extends Component {
         groupIcon: 'fa-cubes',
         nodes: [
           {
-            nodeType: 'strategy-node',
+            nodeType: 'flow-node',
             thumbnail: 'rect',
             style: {
               fill: '#FE9201',
@@ -426,7 +426,7 @@ export default class App extends Component {
       },
       {
         id: 'node2',
-        type: 'strategy-node',
+        type: 'flow-node',
         size: [170, 70],
         // x: 600,
         // y: 200,
@@ -439,7 +439,7 @@ export default class App extends Component {
       },
       // {
       //   id: 'node3',
-      //   type: 'strategy-node',
+      //   type: '-node',
       //   size: [170, 70],
       //   // x: 600,
       //   // y: 200,
@@ -556,6 +556,8 @@ export default class App extends Component {
   refWlf = React.createRef<HTMLDivElement>();
   cvteFlow: any = null;
   componentDidMount() {
+
+    console.log("ToolGroup>>>>",ToolGroup);
     // const cvteFlow = new Workflow({
     //   container: this.refWlf.current,
     //   width: 1000,
@@ -727,7 +729,8 @@ export default class App extends Component {
       // this.setState({ visible: true });
       // this.doubleNode = item;
       const group = item.get('group');
-      // group.updateLeftText({ text: '111111' }).updateTitleText({ text: '2222' });
+      console.log('group: ', group);
+      // group.updateLeftText({ text: '111111' });
       group.updateText && group.updateText({text: group.textWidthToEllipsis({text: '我将会是最长的文本，这样写出来不知道会是什么燕子'})});
 
 
@@ -774,6 +777,7 @@ export default class App extends Component {
           returnGraph={this.getGraph}
           registerEdgeList={registerEdges}
           mode={'edit'}
+          commandList={commandList}
           initPlugins={[contextMenu]}
           // judgeEdgeEnd={(sourceNode, targetNode) => { console.log(sourceNode);  return false;}}
           toolbar={

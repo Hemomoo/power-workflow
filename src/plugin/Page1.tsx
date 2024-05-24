@@ -14,6 +14,7 @@ import { ToolGroup, ToolItem } from './workflow/Flow/Components/Toolbar'
 
 // import { default as Flow, Workflow } from '../dist/power-workflow';
 // import Flow from 'max-workflow';
+import { Menu } from '@antv/g6';
 
 import config from './config';
 
@@ -65,6 +66,47 @@ const commandList = [
   }
 ]
 
+
+// 增加menu
+
+const baseClasses =
+  'hover:bg-[#1677ff] hover:text-white rounded-lg p-1  cursor-pointer text-[#000000]';
+
+const contextMenu = new Menu({
+  getContent(evt) {
+    console.log('evt: ', evt);
+    return `
+    <ul class="">
+      <li data-attr="run" class="${baseClasses}">运行该节点</li>
+      <li data-attr="runAll" class="${baseClasses}">运行该节点及下游</li>
+      <li data-attr="editName" class="${baseClasses}">修改节点名称</li>
+      <li data-attr="delete" class="${baseClasses}">删除节点</li>
+      <li data-attr="failMsg" class="${baseClasses}">查看节点失败信息</li>
+    </ul>`;
+  },
+  handleMenuClick: (target, item, graph) => {
+    const model = item.getModel();
+    console.log('model: ', model.titleText);
+    const attr = target.getAttribute('data-attr');
+    const node = graph.findById(model.id);
+    switch (attr) {
+      case 'run':
+        // eslint-disable-next-line no-console
+        console.log('run');
+        break;
+      case 'editName':
+      
+        break;
+      case 'delete':
+        break;
+      default:
+        break;
+    }
+  },
+  offsetX: 16 + 10,
+  offsetY: 0,
+  itemTypes: ['node'],
+});
 
 export default class App extends Component {
 
@@ -734,6 +776,7 @@ export default class App extends Component {
           initEdges={this.state.initEdges}
           // initEdges={config.edges}
           animate
+          initPlugins={[contextMenu]}
           unusedCommands={["undo","redo"]}
           layout="horizontal"
           returnGraph={this.getGraph}

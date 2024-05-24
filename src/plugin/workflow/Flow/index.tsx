@@ -89,6 +89,7 @@ interface IProps {
   mode?: 'edit' | 'view';
     /** 默认展示的命令 */
   unusedCommands? : string[]; 
+  initPlugins?: any[];
 } 
 
 const baseSize = {
@@ -184,7 +185,7 @@ class Flow extends Component<IProps> {
   /** 初始化流程图 */
   initWorkflow = () => {
     const { size } = this.state;
-    const { initEdges, initNodes, layout, returnGraph, animate, commandList, judgeEdgeEnd, registerNodeList = [], registerEdgeList = [], registerNodes = [], registerBehaviors = [], treeGroup, defaultEdge, defaultNode, modes, mode = 'edit' } = this.props;
+    const { initEdges, initNodes, layout, returnGraph, animate, commandList, judgeEdgeEnd, registerNodeList = [], registerEdgeList = [], registerNodes = [], registerBehaviors = [], initPlugins=[], treeGroup, defaultEdge, defaultNode, modes, mode = 'edit' } = this.props;
     const Command = new CommandPlugin();
     const plugins: any[] = [Command];
 
@@ -202,7 +203,7 @@ class Flow extends Component<IProps> {
       container: this.workflowContainer.current,
       width: size.flowWidth,
       height: size.flowHeight,
-      plugins: plugins,
+      plugins: plugins.concat(initPlugins),
       // layout: layoutSetting[layout],
       layout: layout,
       initNodes,
